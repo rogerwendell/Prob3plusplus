@@ -1,0 +1,285 @@
+
+Updated 20181119 
+
+Prob3++ is an Engine for computing three-flavor neutrino oscillation
+probabilities. The main library libThreeProb.a can be used
+to externally call routines to compute said probabilities. 
+
+////// Library Version 
+   This document is valid for library version
+    v3.10  
+
+
+////// main library compilation
+
+Makefile:
+    > make
+
+
+Included in this module are two simple programs to give the user a general feel
+for how the library works. 
+
+probLiner.cc:
+
+ Makefile 
+ made with -> make probLinear 
+ run with -> ./probLinear
+
+ This program will compute neutrino oscillations for neutrinos passing through
+a slab of the constant density. The output file, LinearProb.root will contain 
+ROOT histograms of these probabilities as a function of density, L/E, and as functions
+of L and E separately. The oscillation probabilities are set with the main body of the code.
+
+
+probRoot.cc:
+
+GNUmakefile (source appropriate env.csh)
+ made with -> make probRoot 
+ run with -> ./probRoot
+
+
+  ProbRoot similarly computes oscillations but for neutrinos travelling through a sphere. The defualt 
+radial denisty profile is that of the Earth. However a density profile may be loaded from a text file
+for a sphere of any denisty profile and radius. More will be discussed below. In this case oscillation
+probabiliteies as a funciton of neutrino zenith angle, and energy are computed and dumped into 
+a file RawProb.root. The histograms therein can readily be viewed using makeOne.C 
+ 
+
+    > root -l RawProb.root makeOne.C
+
+
+probLV.cc:
+> make probLV 
+> ./probLV 
+   
+  This module computes Lorentz-violating oscillation probabilities as a function of pathlength and neutrino 
+  energy either for neutrinos traversing the earth or through a slice of constant density 
+  matter.
+
+  > root -l fullSME_Prob.root drawLV.C
+
+
+///// About Parameter inputs 
+
+   The software has been written assuming neutrino propagation in a normal 
+   hierarchy. In this convention the atmospheric delta-m^2 is defined to be 
+   a positive number for the normal hierarchy. The fundamental input mass squared 
+   difference for atmospheric mixing is m^2_{32} = m^2_3 - m^2_2.
+
+   There are two modes of mixing which can be specified by a call to 
+   BargerPropagator::SetOneMassScaleMode( bool ). The default mode 
+   corresponds to true (this is also true if no call to this function is made)
+
+   In this mode, BargerPropagator::SetOneMassScaleMode( true )  
+   
+   * To compute oscillation probabilities assuming an inverted hierarchy 
+     use a negative number for the value of delta-m^2. The code will 
+     automatically adjust the input value by the solar mass splitting 
+     to provide the correct value of m^2_{32} to internal routines. Effectively
+     the input mass squared splitting in this case corresponds to m^2_{31}
+
+   Under BargerPropagator::SetOneMassScaleMode( false )  
+
+   * To compute oscillation probabilities assuming an inverted hierarchy 
+     again use a negative number for the value of delta-m^2_32, but the 
+     difference between normal hierarch and inverted hierarchy values 
+     of this parameter must be specified by hand. That is, the correction
+     for the finite size of the solar splitting must be performed manually.
+     
+
+   The MNS matrix is defined not only by the mixing parameters but 
+   also by the expected type of progation, neutrino or antineutrino. 
+   This produces an extra argument in the call to SetMNS (see below)
+
+   * To compute oscillation probabilities for antineutrinos 
+     - Change the sign of the input neutrino flavor ( see below )
+
+
+   -- As of v2.00 it is no longer necessary to change the sign of dcp 
+      during antineutrino propagation. 
+
+
+
+///// About propagators 
+
+  There are a few "propagators" included in this module, all of which derive from the
+  NeutrinoPropagator class. The most commonly used one is the BargerPropagator, 
+  which describes standard PMNS oscillations.
+
+  The neutrino oscillation probabilities are stored as doubles.
+  Its use is as follows:
+
+      // create a pointer to a new BargerPropagator Object
+      BargerPropagator * bNu  = new BargerPropagator(  ); 
+
+                    OR to use a user-defined density profile
+
+      BargerPropagator * bNu  = new BargerPropagator( some-file-name ); 
+ 
+      // specify the neutrino oscillation parameters
+      // the form of the variables is interpreted by the last boolean, kSquared
+      // when true, it means that mixing angles, theta23, etc. are of the form sin^2(  theta23 )
+      // when false, the mixing angles,                        are of the form sin^2(2 theta23 )
+      // Delta cp should be entered in radians
+      // The last parameter is +: neutrinos -:anti-neutrinos , defaults to neutrino
+      bNu->SetMNS( theta12,  Theta13, Theta23, dm12, DM23, delta_cp , Energy, kSquared, KNuType ); 
+
+      *****
+        N.B.  This routine reverses the sign of delta_cp for antineutrino propagation
+        to perform the complex conjugation of the MNS matrix internally. 
+        Please note this behavior is different than earlier versions of the library ( <= v1.00 )
+        and the user is no longer responsible for changing the sign of delta_cp by hand.
+
+        If the neutrino type is not the same as that in the call to propagate (see below)
+        program execution stops.
+        This error can be suppressed with a call to
+           BargerPropagator::SetWarningSuppression()
+         For expert use only
+      ***** 
+        
+
+      
+
+  After the propagator has been created there is a choice of propagation modes
+
+      // to progagate through linear matter of constant density
+      // type is an integer,  +: neutrino propagaton  -: anti-neutrino propagation
+      //   it should be the same as in the call to SetMNS (see above)
+      // PathLength is the pathlength through the matter in [km]
+      // Density is the matter's density in [g/cm^3]
+      bNu->propagateLinear( type, PathLength , Density );
+
+                    OR 
+
+      // to propagate through matter in a sphere:
+      // cosineZ is the neutrino zenith angle  -1: upward going, 0: horizontal +1:downward going
+      // prod_height is the production height in the atmosphere [km]
+      // type is an integer,  +: neutrino propagaton  -: anti-neutrino propagation
+      bNu->DefinePath( cosineZ, prod_height );
+      bNu->propagate( type );
+
+
+   At this point the computed oscillation probabilities can be obtained with a call to:
+      // the neutrino types are:
+      // 1:e 2:mu 3:tau   -1: e_bar -2: mu_bar -3: tau_bar
+      prob = bNu->GetProb( nu_in, nu_out );
+     
+                    OR
+  
+   For Vacuum oscillation probabilities the situation is more straightforward
+      // Energy is [GeV]
+      // Path is [km] 
+      prob = bNu->GetVacuumProb( nu_in, nu_out , Energy,  Path );
+
+   Everytime a the energy or desired oscillation probabilities change one must call 
+   the SetMNS() routine before calling one of the above three propagation routines.
+   If for instance these parameters are not changed, subsequent calls to the 
+   propagation routines may be made _without_ another call to SetMNS().
+
+
+   ////  
+   //
+   //  Lorentz Invariance Violation with the Full SME 
+   //
+   //
+   //  ** 20181819 
+   A propagator for the computation of Lorentz invariance-violation oscillations 
+   is provided via the FullSME propagator. It assumes propagation through 
+   constant density matter and calculates a fully three-flavor oscillation 
+   probability using a non-perturbative method from the Standard Model Extension 
+   framework. See PRD91 052003. 
+ 
+   In addition to setting the MNS mixing matrix the user must also specify 
+   the LV potentials (the "A" and "C" matrices) via the "Set*Matrix*" routines.
+
+   Ie to set the e-tau coefficients of the "C" matrix (only):
+
+   for ( i = 0 ; i < 3 ; i ++ )
+     for ( j = 0 ; j < 3 ; j ++ )
+     {
+       SMEnu->SetLVMatrixEntry( "A" , i, j, 0.0, 0.0 );
+       SMEnu->SetLVMatrixEntry( "C" , i, j, 0.0, 0.0 );
+     }
+   // index 0 is for nue 
+   // index 1 is for numu 
+   // index 2 is for nutau 
+   SMEnu->SetLVMatrixEntry( "C" , 0, 2, 7.5e-23, 0.0    );
+   SMEnu->SetLVMatrixEntry( "C" , 2, 0, 7.5e-23, 0.0    );
+
+   This must be done before a call to SetHamiltonian. 
+
+    SMEnu->SetMNS( Theta12,  Theta13, Theta23, dm2, DM2, delta , energy, kSquared, kNuBar ); 
+    // For propagation in the Earth
+    SMEnu->DefinePathFromLength( PathLength, 25.00  );
+
+    // For propagation in constant density matter, here 22 g/cm^3
+    //SMEnu->DefineLinearPath( PathLength, 22.0 );
+
+    SMEnu->SetHamiltonian( energy );
+    
+    No you can propagate! 
+    SMEnu->propagate( kNuBar );
+
+    Probabilities are returned using the same GetProb() routine 
+    from BargerPropagator
+
+   
+
+
+/////// about input density profiles
+
+  User-specified density profiles must contain two columns of floating point
+  numbers, the first is the radial distance [km] from the sphere center, the second
+  is the density [g/cm^3] for 
+  0.      x_0
+  r_1     x_1
+  ..      ..
+  r_n     x_n
+  the last entry should contain the radius of the sphere.
+  each x_i represents the density up to and including r_i
+  the entry for zero radial density must be included. 
+
+
+  so in PREM.dat, the lines
+  1220    13.0
+  3480    11.3
+
+  indicate that the density of the earth from 1220 to 3480 radial km 
+  is 11.3 g/cm^3. ( Below 1220 km, is 13.0 g/cm^3 )
+
+//////////
+
+
+//////////////////
+ Python Wrapper 
+
+ - A simple python wrapper for just the BargerPropagator class is provided 
+in the py_wrapper.c. It has been written under ctypes, instead of something 
+more fancy, because cytpes is bundled (and should therefore be present) in 
+all pthon distributions. 
+
+ To use the shared library must be used:
+
+ >make shared 
+
+ Be sure that the Prob3++ directory is included in your LD_LIBRARY_PATH, or install 
+the shared library into some directory that is. 
+
+
+ To run the test script, you may have to change the path to the python executable
+at the top of the file: simpleLinear.py . This script requires pyroot.
+ 
+
+
+///////////// About
+
+  This code has been written by members of the Super-Kamiokande collaboration
+and is presented here in a purified form. Though not the sole author,
+Roger Wendell (-rvw) is presently maintaining the software. Comments and suggestions
+are welcome at:
+
+   raw@scphys.kyoto-u.ac.jp
+   raw@suketto.icrr.u-tokyo.ac.jp
+
+   Other types of oscillation modules may be provided in the future.  Thanks kindly, 
+and please enjoy your personal search for cp and or Lorentz invariance violation!
