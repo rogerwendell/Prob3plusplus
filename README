@@ -1,13 +1,21 @@
-
+///// Introduction 
+ 
 Updated 20181119 
 
-Prob3++ is an Engine for computing three-flavor neutrino oscillation
-probabilities. The main library libThreeProb.a can be used
-to externally call routines to compute said probabilities. 
+Prob3++ is software for computing three flavor neutrino oscillation probabilities based on the work of Barger et al. Phys. Rev. D22(1980) 2718. It has been written by members of the Super-Kamiokande collaboration in C/C++ and is available for public use at the links below. Example programs designed to explain the code usage as well as documentation are included.
+
+
+As of December 2018 support for Lorentz invariance-violating oscillations has been added to the library. The computation uses the SME framework (A. Kostelecky et al.) and follows the parameterization in Phys. Rev. 91 052003.
+
+
+The code is liscenced under GNU GPLv3 (see LISCENCE document).
+
 
 ////// Library Version 
    This document is valid for library version
     v3.10  
+
+   The main library libThreeProb.a can be used to externally call the oscillation computations. 
 
 
 ////// main library compilation
