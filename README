@@ -236,7 +236,7 @@ probLV.cc:
 
 /////// about input density profiles
 
-  User-specified density profiles must contain two columns of floating point
+  User-specified density profiles must contain at least two columns of floating point
   numbers, the first is the radial distance [km] from the sphere center, the second
   is the density [g/cm^3] for 
   0.      x_0
@@ -254,6 +254,20 @@ probLV.cc:
 
   indicate that the density of the earth from 1220 to 3480 radial km 
   is 11.3 g/cm^3. ( Below 1220 km, is 13.0 g/cm^3 )
+
+ :: As of 20210425 input files containing the chemical composition factor
+  Yp = n_e / (np+nn) , where ne is number of electrons and 
+  np and nn are the number of protons, is also included.
+
+  Files of the sort 
+  0.      x_0   yp_0
+  r_1     x_1   yp_1
+  ..      ..    ...
+  r_n     x_n   yp_n 
+
+  If Yp is not specified the default is 0.468 for core layers 
+  and 0.497 otherwise. 
+  (For propagateLinear the default is 0.5 )
 
 //////////
 
