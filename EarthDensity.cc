@@ -1,6 +1,7 @@
 #include "EarthDensity.h"
 #include <iostream>
 #include <cstdlib>
+#include <sstream>
 
 EarthDensity::EarthDensity( ) 
 {
@@ -12,10 +13,19 @@ EarthDensity::EarthDensity( )
    _density[ 3480.0 ]  =  11.3 ;
    _density[ 5701.0 ]  =  5.0 ;
    _density[ 6371.0 ]  =  3.3 ;
+
+   // chemical composition
+   _YpMap[ 0 ]       =  0.468 ;
+   _YpMap[ 1220.0 ]  =  0.468 ;
+   _YpMap[ 3480.0 ]  =  0.497 ;
+   _YpMap[ 5701.0 ]  =  0.497 ;
+   _YpMap[ 6371.0 ]  =  0.497 ;
+
    REarth  = 6371.0 ; 
 
    _TraverseDistance  = NULL;
    _TraverseRhos      = NULL;
+   _Yp                = NULL;
    
    init();
 
@@ -27,6 +37,8 @@ EarthDensity::EarthDensity( const char * file )
 {
     _TraverseDistance  = NULL;
     _TraverseRhos      = NULL;
+    _Yp                = NULL;
+
     LoadDensityProfile( file );
 }
 
@@ -35,6 +47,7 @@ void EarthDensity::LoadDensityProfile( const char * file )
         ifstream PREM_dat;
         double r_dist = 0.0;    // radial distance -- map key //
         double rho;             // density at that distance -- map value //
+        double lyp;
         double REarth  = 6371.0 ; 
 
 	DensityFileName = file;
@@ -48,11 +61,39 @@ void EarthDensity::LoadDensityProfile( const char * file )
         else
            cout << "Loading Density profile from: " << DensityFileName << endl;
 
+        // count the number of columns to separate IO between reading 
+        // files like 
+        //   radius rho     and  
+        //   radius rho  Yp and  
+        std::string line;
+        getline( PREM_dat , line);         
+        std::stringstream s;
+        s << line;                   
+        int count = 0;
+        double dummy; 
+        while ( s >> dummy ) count++;
+
+        // rewind the file 
+        PREM_dat.clear();
+        PREM_dat.seekg(0);
+         
         while( !PREM_dat.eof( ) )
         {
                 if ( r_dist > REarth ) REarth = r_dist;
-                PREM_dat >> r_dist >> rho ;
-                _density[r_dist] = rho;
+            
+                if( count == 2 ) 
+                { 
+                   PREM_dat >> r_dist >> rho ;
+                   _density[r_dist] = rho ;
+                   _YpMap  [r_dist] = 0.5 ;
+                }
+                else
+                { 
+                   PREM_dat >> r_dist >> rho >> lyp ;
+                   _density[r_dist] = rho ;
+                   _YpMap  [r_dist] = lyp ;
+                }
+
         }
         PREM_dat.close();
 
@@ -82,7 +123,8 @@ void EarthDensity::SetDensityProfile( double CosineZ, double PathLength , double
 
 
    // path through air
-   _TraverseRhos[0] = 0.0;
+   _TraverseRhos[0] = 0.0 ;
+   _Yp[0]           = 0.0 ;
    _TraverseDistance[0] =  PathLength - TotalEarthLength ;
 
 // std::cout << " Earth ... PathLenght: " << PathLength << " totallength " << TotalEarthLength << std::endl;
@@ -108,6 +150,7 @@ void EarthDensity::SetDensityProfile( double CosineZ, double PathLength , double
    {
  
       _TraverseRhos[i+1]      = _Rhos[i];
+      _Yp          [i+1]      = _Yps [i];
       CrossThis = 2.0*sqrt( _Radii[i]   * _Radii[i]    - REarth*REarth*( 1 -CosineZ*CosineZ ) );
 
      if( i < MaxLayer-1 )
@@ -122,6 +165,7 @@ void EarthDensity::SetDensityProfile( double CosineZ, double PathLength , double
      if( i < MaxLayer ){
         _TraverseRhos    [ 2*MaxLayer - i ] = _TraverseRhos[i];
         _TraverseDistance[ 2*MaxLayer - i ] = _TraverseDistance[i];
+        _Yp              [ 2*MaxLayer - i ] = _Yp[i]; 
      }
    }
 
@@ -154,33 +198,35 @@ void EarthDensity::ComputeMinLengthToLayers()
 void EarthDensity::Load( )
 {
 
-        int MaxDepth = 0;
+      int MaxDepth = 0;
 
-	//map<double, double>::iterator _i;
-	map<double, double>::reverse_iterator _i;
+      //map<double, double>::iterator _i;
+      map<double, double>::reverse_iterator _i;
 
 
       if( _TraverseRhos     != NULL ) delete [] _TraverseRhos;
       if( _TraverseDistance != NULL ) delete [] _TraverseDistance;
+      if( _Yp               != NULL ) delete [] _Yp; 
 
       //_i = _density.end();
       //_i--;
       _i = _density.rbegin();
       REarth = _i->first;  // Earth is 6371.0 [km]
 
+      // to get the densities in order of decreasing radii
+      for( _i = _density.rbegin() ; _i != _density.rend() ; ++_i )
+      {
+	 _Rhos .push_back( _i->second );
+   	 _Radii.push_back( _i->first  );
+	 MaxDepth++;
+      } 
 
-       
-	// to get the densities in order of decreasing radii
-       for( _i = _density.rbegin() ; _i != _density.rend() ; ++_i )
-       {
-	  _Rhos.push_back( _i->second );
-   	  _Radii.push_back( _i->first  );
-	  MaxDepth++;
-       } 
-
+      for( _i = _YpMap.rbegin() ; _i != _YpMap.rend() ; ++_i )
+   	 _Yps  .push_back( _i->second  );
 
       _TraverseRhos      = new double [ 2*MaxDepth + 1 ];
       _TraverseDistance  = new double [ 2*MaxDepth + 1 ];
+      _Yp                = new double [ 2*MaxDepth + 1 ];
 
       return;
                                                                                                                                                              
@@ -191,6 +237,7 @@ EarthDensity::~EarthDensity( )
 {
    if( _TraverseRhos     != NULL ) delete [] _TraverseRhos;
    if( _TraverseDistance != NULL ) delete [] _TraverseDistance;
+   if( _Yp               != NULL ) delete [] _Yp; 
 
 }
 

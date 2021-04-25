@@ -72,6 +72,8 @@ int main(int argc, char * argv[] )
    BargerPropagator   * bNu; 
 
    bNu = new BargerPropagator( );
+   //bNu = new BargerPropagator("PREM.dat");
+
    bNu->UseMassEigenstates( false ); // this is default (use flavor eigenstates)
 
    // Octant for Theta23 in sin2(2x) mode

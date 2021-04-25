@@ -89,13 +89,16 @@ void BargerPropagator::propagate( int NuFlavor ){
 	
    Earth->SetDensityProfile( CosineZenith, PathLength, ProductionHeight );
    Layers = Earth->get_LayersTraversed( );
-
 	
    for ( i = 0; i < Layers ; i++ )
    {
+
+      double electron_density = Earth->get_DensityInLayer(i) * 
+                                Earth->get_YpInLayer(i);
+ 
       get_transition_matrix(  NuFlavor  , 
                               Energy	,		   // in GeV
-                              Earth->get_DensityInLayer(i) * density_convert, 
+                              electron_density ,
                               Earth->get_DistanceAcrossLayer(i)/1.0e5,     // in km
                               TransitionMatrix,			           // Output transition matrix
                               0.0  					   // phase offset 

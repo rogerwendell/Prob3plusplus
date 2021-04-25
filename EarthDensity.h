@@ -73,6 +73,7 @@ class EarthDensity
 		// self-explanatory
 		double get_DistanceAcrossLayer( int i) { return _TraverseDistance[i];};
 		double get_DensityInLayer( int i) { return _TraverseRhos[i];};
+		double get_YpInLayer( int i)      { return _Yp[i];          };
 
 
                 // return total path length through the sphere, including vacuum layers
@@ -95,12 +96,15 @@ class EarthDensity
 			
 		map<double, double>	_CosLimit;
                 map<double, double>	_density;
+                map<double, double>	_YpMap; 
 
 		vector< double >	_Radii;
 		vector< double >	_Rhos;
+		vector< double >	_Yps ;
 
 		double * _TraverseDistance;
 		double * _TraverseRhos;
+		double * _Yp;
 		
 
 		double REarth;

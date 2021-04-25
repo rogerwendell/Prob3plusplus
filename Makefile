@@ -21,7 +21,7 @@ OBJS    = EarthDensity.o BargerPropagator.o mosc.o mosc3.o FullSMEPropagator.o \
           $(WRAPPERS)
 
 LIBBASE   = ThreeProb
-VER       = 3.10
+VER       = 3.20
 TAG       = 
 LIBALIAS  = $(LIBBASE)$(TAG)
 LIBNAME   = $(LIBALIAS)_$(VER)
