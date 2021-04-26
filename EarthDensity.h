@@ -34,12 +34,23 @@
 
 using namespace std;
 
+// For polynomial interpolation of main density structures 
+// in PREM model
+struct DensityCoefficients {
+    // rho [g/cm3] = a * (R[km])^2 + b * (R[km]) + c
+    double a;
+    double b;
+    double c;
+};
+
+
+
 class EarthDensity
 {
 	public:
                 // default contstructor for the Earth, and a radial density profile 
                 // as specified by the SK 3f paper: PRD.74.032002 (2006) 
-                EarthDensity( );
+                EarthDensity( bool x = false );
                  
                 // constructor for a user-specified density profile, see PREM.dat 
 		EarthDensity( const char * );
@@ -105,10 +116,19 @@ class EarthDensity
 		double * _TraverseDistance;
 		double * _TraverseRhos;
 		double * _Yp;
-		
+
+
+                // extra Rho coefficients for polynomial interpolation of profile
+                map<double, DensityCoefficients>        _densityCoefficients;
+                vector< double >        _Rhos_a;
+                vector< double >        _Rhos_b;
+                vector< double >        _Rhos_c;
 
 		double REarth;
 		int Layers;			
+
+                bool kUseAverageDensity;
+
 };
 
 

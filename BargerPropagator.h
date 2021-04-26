@@ -25,7 +25,7 @@ class BargerPropagator : public NeutrinoPropagator
       BargerPropagator( );
       // const char specifies an input radial density profile, c.f. PREM.dat
       BargerPropagator( bool );
-      BargerPropagator( const char *);
+      BargerPropagator( const char *, bool k = false );
      ~BargerPropagator(      );
       
       // main driving routine for computing oscillations through a sphere

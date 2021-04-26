@@ -71,7 +71,7 @@ int main(int argc, char * argv[] )
    NeutrinoPropagator * myNu;
    BargerPropagator   * bNu; 
 
-   bNu = new BargerPropagator( );
+   bNu = new BargerPropagator( true );
    //bNu = new BargerPropagator("PREM.dat");
 
    bNu->UseMassEigenstates( false ); // this is default (use flavor eigenstates)

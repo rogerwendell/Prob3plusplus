@@ -2,17 +2,15 @@
 
 BargerPropagator::BargerPropagator()
 {
-//Earth = NULL;
-//std::cout << "BargerPropagator:: " << Earth << " address " << &Earth <<std::endl;; 
+
    Earth = new EarthDensity( );	
-//std::cout << "BargerPropagator:: " << Earth << " address " << &Earth <<std::endl;; 
    init();
 }
 
 
 BargerPropagator::BargerPropagator( bool k )
 {
-   Earth = new EarthDensity( );	
+   Earth = new EarthDensity(k);	
    init();
 }
 
@@ -22,7 +20,7 @@ BargerPropagator::~BargerPropagator( )
    delete Earth;
 }
 
-BargerPropagator::BargerPropagator( const char * f )
+BargerPropagator::BargerPropagator( const char * f , bool k )
 {
    Earth = new EarthDensity( f );	
    init();
