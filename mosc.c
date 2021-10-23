@@ -23,7 +23,7 @@ static NuType matterFlavor = nue_type;
 static double putMix[3][3][2];
 
 /* 2*sqrt(2)*Gfermi in (eV^2-cm^3)/(mole-GeV) - for e<->[mu,tau] */
-static const double tworttwoGf = 1.52588e-4;
+static const double tworttwoGf = 1.5264932449499477998e-4;
 
 /***********************************************************************
   moscerr
@@ -200,7 +200,7 @@ void propagate_vac(double Ain[][3][2], double L, double E,
 		   double Mix[][3][2], double dmVacVac[][3],
 		   double Aout[][3][2]) {
   int a, b, i, j, k;
-  double LoverE = 2.534*L/E;
+  double LoverE = 2.5338653580781978866*L/E;
   double X[3][3][2], A[3][3][2], q;
   
   /* Make the X matrix (eq. 11 simplified since we're in vaccuum) */
@@ -486,7 +486,7 @@ void getA(double L, double E, double rho,
   double X[3][3][2];
   static double product[3][3][3][2];
   /* (1/2)*(1/(h_bar*c)) in units of GeV/(eV^2-km) */
-  const double LoEfac = 2.534;
+  const double LoEfac = 2.5338653580781978866;
 
   if ( phase_offset==0.0 ) {
     get_product(L, E, rho, Mix, dmMatVac, dmMatMat, antitype, product);
