@@ -1,5 +1,7 @@
 #include "FullSMEPropagator.h"
 
+#include <cstring>
+
 const double FullSMEPropagator::LtoeV_Coeff = 5.0677e9;
 
 
