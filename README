@@ -66,6 +66,28 @@ probLV.cc:
 
   > root -l fullSME_Prob.root drawLV.C
 
+////// including Prob3plusplus in your CMake project
+
+  Expose Prob3plusplusConfig.cmake to your project, either by adding the repo directory to the 
+  `CMAKE_MODULE_PATH` or by exporting `Prob3plusplus_ROOT` to your environment pointing to the
+  repo root. In both instances you should have already built the `libThreeProb_<version>.a` before
+  attempting to link this in.
+
+  Use Prob3plusplus in your CMake project like:
+
+```
+  find_package(Prob3plusplus)
+```
+
+  if successfully found, `Prob3plusplus_FOUND` will be set to true and the imported target 
+  `Prob3plusplus::All` will have been defined. You can then link your target to Prob3plusplus like
+
+```
+  target_link_libraries(<target name> Prob3plusplus::All)
+```
+
+  This will link in `libThreeProb_<version>.a` and add the neccessary `-I` include flags to all 
+  source files associated with the dependent target (and other targets dependent on that target).
 
 ///// About Parameter inputs 
 
