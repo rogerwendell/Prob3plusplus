@@ -100,7 +100,7 @@ if(Prob3plusplus_FOUND)
   if(NOT TARGET Prob3plusplus::All)
       add_library(Prob3plusplus::All INTERFACE IMPORTED)
       set_target_properties(Prob3plusplus::All PROPERTIES
-          INTERFACE_INCLUDE_DIRECTORIES "${Prob3plusplus_INCLUDE_DIRS}"
+          INTERFACE_INCLUDE_DIRECTORIES "${Prob3plusplus_INCLUDE_DIR}"
           INTERFACE_LINK_DIRECTORIES "${Prob3plusplus_LIBRARY_DIR}"
           INTERFACE_LINK_LIBRARIES "${Prob3plusplus_LIBRARY}"
       )
