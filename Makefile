@@ -2,14 +2,14 @@
 ROOTCFLAGS = `root-config --cflags`
 ROOTLIBS   = `root-config --libs`
 
-CXXFLAGS += -I. -Wall
+CXXFLAGS += -I. -Wall -std=c++11 -O
 SHAREDFLAGS =  -shared -Wl
 
 
 
 %.o : %.c
 	$(RM) $@
-	$(CC) -c $(CFLAGS) -o $@ $<
+	$(CC) -c $(CFLAGS) -O -o $@ $<
 	
 %.o : %.cc
 	$(RM) $@

@@ -17,7 +17,7 @@ EarthDensity::EarthDensity( bool x )
    // chemical composition
    _YpMap[ 0 ]       =  0.468 ;
    _YpMap[ 1220.0 ]  =  0.468 ;
-   _YpMap[ 3480.0 ]  =  0.497 ;
+   _YpMap[ 3480.0 ]  =  0.468 ;
    _YpMap[ 5701.0 ]  =  0.497 ;
    _YpMap[ 6371.0 ]  =  0.497 ;
 

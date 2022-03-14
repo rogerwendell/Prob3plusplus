@@ -72,7 +72,7 @@ int main(int argc, char * argv[] )
    BargerPropagator   * bNu; 
 
    bNu = new BargerPropagator( true );
-   //bNu = new BargerPropagator("PREM.dat");
+   //bNu = new BargerPropagator("full.PREM.dat");
 
    bNu->UseMassEigenstates( false ); // this is default (use flavor eigenstates)
 

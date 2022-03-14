@@ -22,8 +22,10 @@ BargerPropagator::~BargerPropagator( )
 
 BargerPropagator::BargerPropagator( const char * f , bool k )
 {
+
    Earth = new EarthDensity( f );	
    init();
+
 }
 
 void BargerPropagator::init()
@@ -92,7 +94,7 @@ void BargerPropagator::propagate( int NuFlavor ){
    {
 
       double electron_density = Earth->get_DensityInLayer(i) * 
-                                Earth->get_YpInLayer(i);
+                                 Earth->get_YpInLayer(i);
  
       get_transition_matrix(  NuFlavor  , 
                               Energy	,		   // in GeV
