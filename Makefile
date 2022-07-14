@@ -5,8 +5,6 @@ ROOTLIBS   = `root-config --libs`
 CXXFLAGS += -I. -Wall
 SHAREDFLAGS =  -shared -Wl
 
-
-
 %.o : %.c
 	$(RM) $@
 	$(CC) -c $(CFLAGS) -o $@ $<
@@ -31,8 +29,7 @@ lib3ps    = lib$(LIBNAME).so
 LINK      = lib$(LIBBASE).so
 
 
-targets = $(lib3p) probRoot probLinear probAnalytic
-
+targets = $(lib3p) probRoot probLinear probAnalytic Prob3plusplusConfig.cmake Prob3plusplusConfigVersion.cmake
 
 $(lib3p) : $(OBJS) 
 	$(RM) $@
@@ -48,6 +45,9 @@ $(lib3ps) : $(OBJS)
 
 shared : $(lib3ps)
 	
+
+%.cmake: %.cmake.in
+	cat $< | sed "s|__Prob3plusplus_VERSION__|$(VER)|g" > $@
 
 probRoot: probRoot.o $(lib3p) 
 	$(RM) $@

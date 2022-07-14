@@ -1,5 +1,7 @@
 if(NOT TARGET Prob3plusplus::All)
 
+set(Prob3plusplus_VERSION "__Prob3plusplus_VERSION__")
+
 cmake_minimum_required (VERSION 3.14 FATAL_ERROR)
 # This will define the following variables
 #
@@ -77,9 +79,6 @@ get_filename_component(Prob3plusplus_LIBRARY
 
 get_filename_component(Prob3plusplus_LIBRARY_DIR 
   "${Prob3plusplus_LIBRARY_FQPATH}" DIRECTORY)
-
-string(REGEX REPLACE libThreeProb_\(.*\)\\.a \\1
-       Prob3plusplus_VERSION ${Prob3plusplus_LIBRARY})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Prob3plusplus
