@@ -5,7 +5,7 @@ find_program(CMAKE_C_COMPILER NAMES $ENV{CC} gcc PATHS ENV PATH NO_DEFAULT_PATH)
 find_program(CMAKE_CXX_COMPILER NAMES $ENV{CXX} g++ PATHS ENV PATH NO_DEFAULT_PATH)
 
 
-SET(Prob3plusplus_VERSION 3.10.1)
+SET(Prob3plusplus_VERSION 3.10.2)
 project(Prob3plusplus VERSION ${Prob3plusplus_VERSION} LANGUAGES CXX C)
 
 #Changes default install path to be a subdirectory of the build dir.
@@ -33,17 +33,21 @@ SET(SOURCE EarthDensity.cc
 	mosc.c
 	mosc3.c)
 
-add_library(Prob3++ SHARED ${SOURCE})
+add_library(Prob3plusplus SHARED ${SOURCE})
 
-set_target_properties(Prob3++ PROPERTIES 
+set_target_properties(Prob3plusplus PROPERTIES 
 	PUBLIC_HEADER "${HEADERS}"
-	EXPORT_NAME Prob3++)
+	EXPORT_NAME Prob3plusplus)
 
-install(TARGETS Prob3++ 
+target_include_directories(
+  Prob3plusplus PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+                       $<INSTALL_INTERFACE:include>
+)
+
+install(TARGETS Prob3plusplus 
 		EXPORT Prob3plusplus-target
 		LIBRARY DESTINATION lib/
 		PUBLIC_HEADER DESTINATION include/)
-
 
 install(EXPORT Prob3plusplus-target
   FILE Prob3plusplusTargets.cmake
