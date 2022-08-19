@@ -5,7 +5,7 @@ find_program(CMAKE_C_COMPILER NAMES $ENV{CC} gcc PATHS ENV PATH NO_DEFAULT_PATH)
 find_program(CMAKE_CXX_COMPILER NAMES $ENV{CXX} g++ PATHS ENV PATH NO_DEFAULT_PATH)
 
 
-SET(Prob3plusplus_VERSION 3.10.2)
+SET(Prob3plusplus_VERSION 3.10.3)
 project(Prob3plusplus VERSION ${Prob3plusplus_VERSION} LANGUAGES CXX C)
 
 #Changes default install path to be a subdirectory of the build dir.
