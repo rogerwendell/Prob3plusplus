@@ -57,7 +57,7 @@ install(EXPORT Prob3plusplus-target
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
-  Prob3plusplusConfig.cmake.in Prob3plusplusConfig.cmake
+  Prob3plusplusConfig.cmake.in ${CMAKE_BINARY_DIR}/Prob3plusplusConfig.cmake
   INSTALL_DESTINATION 
   	/this/is/ignored/for/some/reason/thanks/kitware
   NO_SET_AND_CHECK_MACRO
