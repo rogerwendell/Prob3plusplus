@@ -5,7 +5,7 @@ find_program(CMAKE_C_COMPILER NAMES $ENV{CC} gcc PATHS ENV PATH NO_DEFAULT_PATH)
 find_program(CMAKE_CXX_COMPILER NAMES $ENV{CXX} g++ PATHS ENV PATH NO_DEFAULT_PATH)
 
 
-SET(Prob3plusplus_VERSION 3.10.3)
+SET(Prob3plusplus_VERSION 3.10.4)
 project(Prob3plusplus VERSION ${Prob3plusplus_VERSION} LANGUAGES CXX C)
 
 #Changes default install path to be a subdirectory of the build dir.
@@ -52,7 +52,7 @@ install(TARGETS Prob3plusplus
 install(EXPORT Prob3plusplus-target
   FILE Prob3plusplusTargets.cmake
   NAMESPACE Prob3plusplus::
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/Prob3plusplus
 )
 
 include(CMakePackageConfigHelpers)
@@ -65,8 +65,8 @@ configure_package_config_file(
 
 install(FILES 
 		${CMAKE_BINARY_DIR}/Prob3plusplusConfig.cmake 
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/cmake)
+	DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/Prob3plusplus)
 
-write_basic_package_version_file(${CMAKE_INSTALL_PREFIX}/cmake/Prob3plusplusConfigVersion.cmake
+write_basic_package_version_file(${CMAKE_INSTALL_PREFIX}/lib/cmake/Prob3plusplus/Prob3plusplusConfigVersion.cmake
   VERSION ${Prob3plusplus_VERSION}
   COMPATIBILITY AnyNewerVersion)
