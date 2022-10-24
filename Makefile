@@ -2,7 +2,7 @@
 ROOTCFLAGS = `root-config --cflags`
 ROOTLIBS   = `root-config --libs`
 
-CXXFLAGS += -I. -Wall
+CXXFLAGS += -I. -Wall -fPIC
 SHAREDFLAGS =  -shared -Wl
 
 %.o : %.c
@@ -38,9 +38,8 @@ $(lib3p) : $(OBJS)
 
 
 $(lib3ps) : $(OBJS)
-	$(RM) $@
-	$(CXX) $(SHAREDFLAGS)$@ -o $@ $(OBJS) 
-	$(RM) $(LINK)
+	$(CXX) -shared -o $@ $(OBJS) 
+	-$(RM) $(LINK)
 	ln -s $(lib3ps) $(LINK)
 
 shared : $(lib3ps)
