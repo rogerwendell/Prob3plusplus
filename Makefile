@@ -3,6 +3,7 @@ ROOTCFLAGS = `root-config --cflags`
 ROOTLIBS   = `root-config --libs`
 
 CXXFLAGS += -I. -Wall -fPIC
+CFLAGS += -Wall -fPIC
 SHAREDFLAGS =  -shared -Wl
 
 %.o : %.c
