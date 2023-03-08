@@ -7,8 +7,8 @@ get_filename_component(Prob3plusplus_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH
 
 include(${Prob3plusplus_CMAKE_DIR}/Prob3plusplusTargets.cmake)
 
-if(NOT TARGET Prob3plusplus::Prob3++)
-  message(FATAL_ERROR "After including ${Prob3plusplus_CMAKE_DIR}/Prob3plusplusTargets.cmake, expected target: Prob3plusplus::Prob3++ was not declared.")
+if(NOT TARGET Prob3plusplus::Prob3plusplus)
+  message(FATAL_ERROR "After including ${Prob3plusplus_CMAKE_DIR}/Prob3plusplusTargets.cmake, expected target: Prob3plusplus::Prob3plusplus was not declared.")
 endif()
 
 find_path(Prob3plusplus_INCLUDE_DIR
@@ -31,6 +31,6 @@ if(NOT TARGET Prob3plusplus::All)
   add_library(Prob3plusplus::All INTERFACE IMPORTED)
   set_target_properties(Prob3plusplus::All PROPERTIES
       INTERFACE_INCLUDE_DIRECTORIES "${Prob3plusplus_INCLUDE_DIR}"
-      INTERFACE_LINK_LIBRARIES Prob3plusplus::Prob3++
+      INTERFACE_LINK_LIBRARIES Prob3plusplus::Prob3plusplus
   )
 endif()
