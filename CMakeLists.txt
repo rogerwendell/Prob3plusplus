@@ -25,11 +25,12 @@ endif()
 
 SET(HEADERS EarthDensity.h 
 	BargerPropagator.h 
+  NeutrinoPropagator.h
 	mosc.h
 	mosc3.h)
 
 SET(SOURCE EarthDensity.cc 
-	BargerPropagator.cc 
+	BargerPropagator.cc
 	mosc.c
 	mosc3.c)
 
