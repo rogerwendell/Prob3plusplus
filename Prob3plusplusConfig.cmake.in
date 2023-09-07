@@ -13,9 +13,12 @@ endif()
 
 find_path(Prob3plusplus_INCLUDE_DIR
 NAMES mosc.h
-PATHS ${Prob3plusplus_CMAKE_DIR}/../include
+PATHS
+  ${Prob3plusplus_CMAKE_DIR}/../include
+  ${Prob3plusplus_CMAKE_DIR}/../../../include
 )
 
+message(STATUS "Prob3plusplus_CMAKE_DIR: ${Prob3plusplus_CMAKE_DIR}")
 message(STATUS "Prob3plusplus_INCLUDE_DIR: ${Prob3plusplus_INCLUDE_DIR}")
 message(STATUS "Prob3plusplus_VERSION: ${Prob3plusplus_VERSION}")
 
